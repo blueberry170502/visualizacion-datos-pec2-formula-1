@@ -9,7 +9,7 @@ function FichaPiloto({ seleccionado, alSeleccionar }) {
   }
 
   // Solo los 10 pilotos del bump chart tienen datos de 2021 a 2025.
-  const evolucion = EVOLUCION_2021_2026.find((p) => p.nombre === seleccionado);
+  const evolucion = EVOLUCION_2021_2025.find((p) => p.nombre === seleccionado);
 
   return html`
     <div
@@ -29,7 +29,7 @@ function FichaPiloto({ seleccionado, alSeleccionar }) {
         Posición media de llegada: ${formatearDecimal(piloto.posicionMedia)}
       </p>
       ${evolucion &&
-      html`<p>Posiciones 2021–2026: ${evolucion.posiciones.join(", ")}</p>`}
+      html`<p>Posiciones 2021–2025: ${evolucion.posiciones.join(", ")}</p>`}
     </div>
   `;
 }

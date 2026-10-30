@@ -1,7 +1,7 @@
-// BumpChart.js — posición final en el campeonato de cada piloto, de 2021 a 2026.
+// BumpChart.js — posición final en el campeonato de cada piloto, de 2021 a 2025.
 // El eje vertical es el puesto (1 arriba): una línea que sube es un piloto que mejora.
 
-let TEMPORADAS = [2021, 2022, 2023, 2024, 2025, 2026];
+let TEMPORADAS = [2021, 2022, 2023, 2024, 2025];
 let PUESTOS_MAXIMOS = 22;
 
 const ANCHO_BUMP = 900;
@@ -35,7 +35,7 @@ function BumpChart({ seleccionado, alSeleccionar, alMostrarTooltip }) {
   // Piloto sobre el que está el cursor (null si ninguno).
   const [pilotoBajoCursor, setPilotoBajoCursor] = useState(null);
 
-  const seleccionadoEstaEnElGrafico = EVOLUCION_2021_2026.some(
+  const seleccionadoEstaEnElGrafico = EVOLUCION_2021_2025.some(
     (p) => p.nombre === seleccionado,
   );
 
@@ -126,7 +126,7 @@ function BumpChart({ seleccionado, alSeleccionar, alMostrarTooltip }) {
       <svg
         viewBox=${`0 0 ${ANCHO_BUMP} ${ALTO_BUMP}`}
         role="img"
-        aria-label="Bump chart de la clasificación final 2021 a 2026"
+        aria-label="Bump chart de la clasificación final 2021 a 2025"
       >
         ${Array.from({ length: PUESTOS_MAXIMOS }, (_, i) => i + 1).map(
           (puesto) => html`
@@ -163,7 +163,7 @@ function BumpChart({ seleccionado, alSeleccionar, alMostrarTooltip }) {
             </text>
           `,
         )}
-        ${EVOLUCION_2021_2026.map(dibujarPiloto)}
+        ${EVOLUCION_2021_2025.map(dibujarPiloto)}
       </svg>
     <//>
   `;

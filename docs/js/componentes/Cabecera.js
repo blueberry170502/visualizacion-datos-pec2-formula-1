@@ -1,6 +1,14 @@
 // Cabecera.js — titular y clasificación final de 2025 (los puntos incluyen sprints).
-let CLASIFICACION_ACTUAL = [];
-let TEMPORADA_ACTUAL = new Date().getFullYear();
+const TEMPORADA_ACTUAL = 2025;
+const CLASIFICACION_ACTUAL = [...PILOTOS]
+  .sort((a, b) => b.puntos - a.puntos)
+  .slice(0, 5)
+  .map((p, i, lista) => ({
+    nombre: p.nombre,
+    equipo: p.equipo,
+    puntos: p.puntos,
+    diferencia: i === 0 ? "" : `−${lista[0].puntos - p.puntos}`,
+  }));
 
 function Cabecera({ seleccionado, alSeleccionar }) {
   return html`
@@ -37,7 +45,7 @@ function Cabecera({ seleccionado, alSeleccionar }) {
             )}
           </ol>
           <div className="cap">
-            Clasificación de pilotos ${TEMPORADA_ACTUAL}, puntos oficiales disponibles.
+            Clasificación según los puntos de Grandes Premios de ${TEMPORADA_ACTUAL} (sin sprints).
             Haz clic en un piloto para seguirlo.
           </div>
         </div>

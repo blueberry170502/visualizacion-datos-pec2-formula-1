@@ -21,13 +21,6 @@ function App() {
   const [tecnica, setTecnica] = useState(tecnicaDeLaUrl);
   const [seleccionado, setSeleccionado] = useState(null);
   const [tooltip, setTooltip] = useState(null);
-  const [estadoDatos, setEstadoDatos] = useState({ cargando: true, error: null, detalle: null });
-  const [versionDatos, setVersionDatos] = useState(0);
-
-  useEffect(() => {
-    cargarDatosF1().then(detalle => { setEstadoDatos({ cargando: false, error: null, detalle }); setVersionDatos(v => v + 1); })
-      .catch(error => setEstadoDatos({ cargando: false, error: error.message, detalle: null }));
-  }, []);
 
   // Cuando cambia el # de la URL, cambiamos de pestaña.
   useEffect(() => {
@@ -56,7 +49,7 @@ function App() {
 
       <main className="wrap">
         <div className="api-status" role="status">
-          ${estadoDatos.cargando ? "Consultando Jolpica F1 API y actualizando los gráficos…" : estadoDatos.error ? `No se han podido actualizar los datos: ${estadoDatos.error}` : `Datos actualizados desde Jolpica F1 API · ${estadoDatos.detalle.carreras} Grandes Premios · ${estadoDatos.detalle.pilotos} pilotos`}
+          Datos históricos de Jolpica F1 API preparados en el notebook · Temporada 2025 · ${CARRERAS.length} Grandes Premios · ${PILOTOS.length} pilotos
         </div>
         <nav role="tablist">
           ${TECNICAS.map(
@@ -96,7 +89,7 @@ function App() {
 
           <div className="chart">
             <${Grafico}
-              key=${tecnica + versionDatos}
+              key=${tecnica}
               seleccionado=${seleccionado}
               alSeleccionar=${alternarSeleccion}
               alMostrarTooltip=${setTooltip}
@@ -120,7 +113,7 @@ function App() {
       <footer>
         <div className="wrap">
           Datos:${" "}
-          <a href="https://github.com/jolpica/jolpica-f1">Jolpica F1 API</a>. Consultas en directo al abrir la página. Bump chart: temporadas 2021–${TEMPORADA_ACTUAL}.
+          <a href="https://github.com/jolpica/jolpica-f1">Jolpica F1 API</a>. Datos descargados y preparados previamente en el notebook. Heatmap y coordenadas paralelas: temporada 2025; bump chart: temporadas 2021–2025.
         </div>
       </footer>
 

@@ -4,10 +4,58 @@ const TEMPORADA_EN_CURSO = new Date().getFullYear();
 const TEMPORADAS_BUMP = [2021, 2022, 2023, 2024, 2025, TEMPORADA_EN_CURSO];
 let EVOLUCION_2021_2026 = EVOLUCION_2021_2025;
 
+// Cola global: todas las peticiones (temporada actual y bump chart) comparten
+// el mismo limitador para no superar el máximo de Jolpica.
+const INTERVALO_API_MS = 450; // ~2,2 peticiones/segundo (límite publicado: 4/s)
+const CACHE_API_MS = 10 * 60 * 1000; // 10 minutos
+let ultimaPeticionApi = 0;
+let colaApi = Promise.resolve();
+
+async function esperarTurnoApi() {
+  const anterior = colaApi;
+  let liberar;
+  colaApi = new Promise(resolve => { liberar = resolve; });
+  await anterior;
+  const espera = Math.max(0, INTERVALO_API_MS - (Date.now() - ultimaPeticionApi));
+  if (espera) await pausa(espera);
+  ultimaPeticionApi = Date.now();
+  return liberar;
+}
+
 async function apiJson(ruta) {
-  const respuesta = await fetch(`${API_F1}/${ruta}`, { cache: "no-store" });
-  if (!respuesta.ok) throw new Error(`Jolpica respondió ${respuesta.status} en ${ruta}`);
-  return respuesta.json();
+  const url = `${API_F1}/${ruta}`;
+  const cacheKey = `jolpica:${url}`;
+  // Caché breve compartida entre visitas para evitar repetir consultas y
+  // agotar el límite horario. Al caducar, se vuelve a consultar la API.
+  try {
+    const guardado = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+    if (guardado && Date.now() - guardado.timestamp < CACHE_API_MS) return guardado.data;
+  } catch (_) { /* Caché inválida: se vuelve a consultar la API. */ }
+
+  let ultimoError;
+  for (let intento = 0; intento < 3; intento++) {
+    const liberar = await esperarTurnoApi();
+    try {
+      const respuesta = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (respuesta.status === 429) {
+        ultimoError = new Error(`Jolpica ha limitado temporalmente las consultas (429) en ${ruta}`);
+        await pausa(5000 * (intento + 1));
+        continue;
+      }
+      if (!respuesta.ok) throw new Error(`Jolpica respondió ${respuesta.status} en ${ruta}`);
+      const data = await respuesta.json();
+      try { localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data })); } catch (_) { /* Caché no disponible o llena. */ }
+      return data;
+    } catch (error) {
+      ultimoError = error;
+      // Un 429 sin cabeceras CORS puede presentarse en el navegador como
+      // TypeError: Failed to fetch. Aplicamos espera también en ese caso.
+      if (intento < 2) await pausa(3000 * (intento + 1));
+    } finally {
+      liberar();
+    }
+  }
+  throw ultimoError || new Error(`No se pudo consultar Jolpica: ${ruta}`);
 }
 function nombrePiloto(d) { return `${d.givenName} ${d.familyName}`; }
 function pausa(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }

@@ -51,4 +51,3 @@ Fuente: [Jolpica F1 API](https://github.com/jolpica/jolpica-f1). Consulta su doc
 ## Datos en directo
 
 La web consulta Jolpica F1 API al abrirse. Los resultados de la temporada actual alimentan el heatmap y las coordenadas paralelas; las clasificaciones 2021–temporada actual alimentan el bump chart. No se necesita backend: las peticiones se hacen desde el navegador. La API limita el acceso sin autenticación a 4 peticiones por segundo y 500 por hora; el código espacía las consultas. Si la API no responde, se muestra un aviso.
-#

@@ -1,0 +1,10 @@
+name: pec2
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pandas>=2.2
+  - requests>=2.31
+  - plotly>=5.18
+  - notebook
+  - ipykernel

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Fórmula 1: análisis interactivo 2021–2026</title>
+
+    <!-- Tipografías (si no cargan, el navegador usa una alternativa) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- Aquí React dibuja toda la página -->
+    <div id="root"></div>
+
+    <!-- 1. Librerías (copias locales, la página funciona sin depender de ningún CDN) -->
+    <script src="vendor/react.production.min.js"></script>
+    <script src="vendor/react-dom.production.min.js"></script>
+    <script src="vendor/htm.js"></script>
+
+    <!-- 2. Datos y textos -->
+    <script src="js/datos/pilotos.js"></script>
+    <script src="js/datos/textos.js"></script>
+
+    <script src="js/api.js"></script>
+
+    <!-- 3. Utilidades y componentes (el orden importa: cada archivo usa los anteriores) -->
+    <script src="js/utilidades.js"></script>
+    <script src="js/componentes/Boton.js"></script>
+    <script src="js/componentes/Tooltip.js"></script>
+    <script src="js/componentes/FichaPiloto.js"></script>
+    <script src="js/componentes/Cabecera.js"></script>
+    <script src="js/componentes/Heatmap.js"></script>
+    <script src="js/componentes/CoordenadasParalelas.js"></script>
+    <script src="js/componentes/BumpChart.js"></script>
+
+    <!-- 4. Aplicación principal -->
+    <script src="js/app.js"></script>
+  </body>
+</html>
